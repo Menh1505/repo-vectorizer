@@ -10,17 +10,23 @@ Code Vectorizer is a tool designed to process source code repositories, extract 
 - Outputs metadata and detailed information about the processed code.
 
 ## Project Structure
-.gitignore 
-main.py 
-requirements.txt 
-run.sh 
-src/ 
-    crawler.py 
-    embedding.py 
-    parser.py 
-    storage.py 
-    pycache/
 
+```
+.gitignore
+main.py
+requirements.txt
+run.sh
+src/
+    crawler.py
+    embedding.py
+    parser.py
+    storage.py
+    __pycache__/
+output/
+    blocks.json
+    metadata.json
+    vectors.faiss
+```
 
 ### Key Files and Directories
 
@@ -38,28 +44,56 @@ src/
 
 ## Installation
 
+### Option 1: Download the Binary Release
+
+1. Go to the [Releases](https://github.com/Menh1505/code_vectorizer/releases) page of this repository.
+2. Download the latest binary for your operating system (e.g., `code_vectorizer.exe` for Windows or `code_vectorizer` for Linux/Mac).
+3. Place the binary in your desired directory and ensure it has execution permissions (on Linux/Mac, run `chmod +x code_vectorizer`).
+
+### Option 2: Run from Source
+
 1. Clone the repository:
+
    ```sh
    git clone <repository-url>
    cd code_vectorizer
    ```
+
 2. Create a virtual environment and activate it:
-    ```sh
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    ```
+
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
 3. Install dependencies:
-    `pip install -r requirements.txt`
+   ```sh
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
-Run the tool using the main.py script:
-`python main.py --repo-path <path_to_repository> --output-dir <output_directory>`
+### Using the Binary Release
 
-Arguments:
-* --repo-path: Path to the source code repository to process.
-* --output-dir: Directory to save the output files.
-* --model-name (optional): Name of the embedding model (default: all-MiniLM-L6-v2).
+Run the binary directly from the command line:
+
+```sh
+./code_vectorizer --repo-path <path_to_repository> --output-dir <output_directory>
+```
+
+### Running from Source
+
+Run the tool using the `main.py` script:
+
+```sh
+python main.py --repo-path <path_to_repository> --output-dir <output_directory>
+```
+
+### Arguments
+
+- `--repo-path`: Path to the source code repository to process.
+- `--output-dir`: Directory to save the output files.
+- `--model-name` (optional): Name of the embedding model (default: `all-MiniLM-L6-v2`).
 
 ## Workflow
 
@@ -76,25 +110,42 @@ Arguments:
 
 ## Example
 
-`python ./main.py --repo-path ../example-repo --output-dir ./output`
-This command processes the example-repo directory and saves the results in the output directory.
+### Using the Binary
+
+```sh
+./code_vectorizer --repo-path ./example-repo --output-dir ./output
+```
+
+### Running from Source
+
+```sh
+python main.py --repo-path ./example-repo --output-dir ./output
+```
+
+Both commands process the `example-repo` directory and save the results in the `output` directory.
 
 ## Development
 
-**Adding New Features**
-- Extend functionality by modifying or adding modules in the src/ directory.
+### Adding New Features
+
+- Extend functionality by modifying or adding modules in the `src/` directory.
 - Ensure new features are tested and documented.
 
-**Ignored Files**
-The following files and directories are excluded from version control (as specified in .gitignore):
+### Ignored Files
+
+The following files and directories are excluded from version control (as specified in `.gitignore`):
+
 - **venv/**: Virtual environment directory.
 - **output/**: Generated output files.
 - **.env**: Environment configuration file.
 
 ## License
+
 This project is licensed under the [MIT](./LICENSE.md).
 
 ---
-If you got bug or need to help, please create new issue or contact via
-telegram: [@Menhythien]
-gmail: [dinhthienmenh1505@gmail.com]
+
+If you encounter a bug or need help, please create a new issue or contact via:
+
+- Telegram: [@Menhythien](https://t.me/Menhythien)
+- Gmail: [dinhthienmenh1505@gmail.com](mailto:dinhthienmenh1505@gmail.com)
