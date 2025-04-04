@@ -1,0 +1,7 @@
+gitpython
+faiss-cpu
+sentence-transformers
+tree-sitter
+numpy
+pandas
+tqdm
