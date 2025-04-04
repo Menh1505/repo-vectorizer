@@ -1,3 +1,7 @@
 venv/
 output/
 .env
+dist/
+build/
+*.pyc
+*.spec
