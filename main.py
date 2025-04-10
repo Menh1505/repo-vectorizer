@@ -4,7 +4,7 @@ from pathlib import Path
 from src.crawler import CodeCrawler
 from src.parser import CodeParser
 from src.embedding import CodeEmbedder
-from src.storage import ChromaDBStorage
+from src.storage import ChromaDBStorage 
 from tqdm import tqdm
 import json
 
@@ -19,7 +19,7 @@ def main():
     crawler = CodeCrawler(args.repo_path)
     code_parser = CodeParser()
     embedder = CodeEmbedder(args.model_name)
-    storage = ChromaDBStorage(collection_name="code_embeddings")
+    storage = ChromaDBStorage(collection_name="code_embeddings")  # Sử dụng ChromaDBStorage
     
     # Crawl all files
     print("Crawling files...")
@@ -34,20 +34,14 @@ def main():
     print("Creating embeddings...")
     embeddings = embedder.embed(blocks)
     
-    # Store in FAISS
-    print("Storing in FAISS...")
+    # Store in ChromaDB
+    print("Storing in ChromaDB...")
     storage.add(embeddings, blocks)
     
-    # Save results
+    # Save detailed information
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    storage.save(
-        str(output_dir / 'vectors.faiss'),
-        str(output_dir / 'metadata.json')
-    )
-    
-    # Save detailed information
     with open(output_dir / 'blocks.json', 'w') as f:
         json.dump(blocks, f, indent=2)
     
