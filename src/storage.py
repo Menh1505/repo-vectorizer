@@ -1,54 +1,34 @@
-# src/storage.py
-import faiss
-import numpy as np
-import json
-from pathlib import Path
+import chromadb
+from chromadb.config import Settings
 from typing import List, Dict
+import numpy as np
 
-class FaissStorage:
-    def __init__(self, dimension: int):
-        self.dimension = dimension
-        self.index = faiss.IndexFlatL2(dimension)
-        self.metadata = []
-        
+class ChromaDBStorage:
+    def __init__(self, collection_name: str = "code_embeddings"):
+        # Khởi tạo client và collection
+        self.client = chromadb.Client(Settings())
+        self.collection = self.client.get_or_create_collection(collection_name)
+
     def add(self, embeddings: np.ndarray, code_blocks: List[Dict]):
-        """Add embeddings and metadata to storage"""
-        self.index.add(embeddings.astype('float32'))
-        self.metadata.extend([{
-            'path': block['path'],
-            'language': block['language']
-        } for block in code_blocks])
-        
-    def save(self, index_path: str, metadata_path: str):
-        """Save index and metadata to files"""
-        # Save FAISS index
-        faiss.write_index(self.index, index_path)
-        
-        # Save metadata
-        with open(metadata_path, 'w') as f:
-            json.dump(self.metadata, f)
-            
-    def load(self, index_path: str, metadata_path: str):
-        """Load index and metadata from files"""
-        # Load FAISS index
-        self.index = faiss.read_index(index_path)
-        
-        # Load metadata
-        with open(metadata_path, 'r') as f:
-            self.metadata = json.load(f)
-            
+        """Thêm embeddings và metadata vào ChromaDB"""
+        # Chuyển embeddings sang dạng list để tương thích với ChromaDB
+        embeddings_list = embeddings.tolist()
+        # Tạo metadata từ code_blocks
+        metadatas = [{"path": block["path"], "language": block["language"]} for block in code_blocks]
+        # Tạo danh sách ID duy nhất cho mỗi embedding
+        ids = [str(i) for i in range(len(code_blocks))]
+        # Thêm vào collection
+        self.collection.add(embeddings=embeddings_list, metadatas=metadatas, ids=ids)
+
     def search(self, query_embedding: np.ndarray, k: int = 5) -> List[Dict]:
-        """Search for similar code blocks"""
-        distances, indices = self.index.search(
-            query_embedding.astype('float32').reshape(1, -1), k
-        )
-        
-        results = []
-        for i, (distance, idx) in enumerate(zip(distances[0], indices[0])):
-            if idx < len(self.metadata):
-                results.append({
-                    'metadata': self.metadata[idx],
-                    'distance': float(distance)
-                })
-                
+        """Tìm kiếm các embedding tương tự"""
+        # Chuyển query_embedding sang list
+        query_embedding_list = query_embedding.tolist()
+        # Truy vấn ChromaDB
+        results = self.collection.query(query_embeddings=[query_embedding_list], n_results=k)
+        # Trả về kết quả
         return results
+
+    def clear(self):
+        """Xóa toàn bộ dữ liệu trong collection"""
+        self.collection.delete()

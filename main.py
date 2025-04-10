@@ -4,7 +4,7 @@ from pathlib import Path
 from src.crawler import CodeCrawler
 from src.parser import CodeParser
 from src.embedding import CodeEmbedder
-from src.storage import FaissStorage
+from src.storage import ChromaDBStorage
 from tqdm import tqdm
 import json
 
@@ -19,7 +19,7 @@ def main():
     crawler = CodeCrawler(args.repo_path)
     code_parser = CodeParser()
     embedder = CodeEmbedder(args.model_name)
-    storage = FaissStorage(dimension=384)  # Dimension depends on the model
+    storage = ChromaDBStorage(collection_name="code_embeddings")
     
     # Crawl all files
     print("Crawling files...")
