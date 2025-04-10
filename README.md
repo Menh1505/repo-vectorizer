@@ -9,6 +9,8 @@ Code Vectorizer is a tool designed to process source code repositories, extract 
 - Stores embeddings in a FAISS index for similarity search.
 - Outputs metadata and detailed information about the processed code.
 
+![visualization](https://github.com/user-attachments/assets/d5a9cfaa-617b-418f-8021-23593fb71237)
+
 ## Project Structure
 
 ```
